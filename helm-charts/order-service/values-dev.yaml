@@ -1,0 +1,26 @@
+namespace: dev
+
+replicaCount: 1
+
+deployment:
+  name: order-deployment
+
+image:
+  repository: europe-west2-docker.pkg.dev/new-dev-492605/myhomerepo/order-service
+  tag: "1.0"
+
+service:
+  port: 5001
+
+resources:
+  requests:
+    cpu: "100m"
+  limits:
+    cpu: "200m"
+
+# 👇 ADD THIS SECTION (CONFIGMAP VALUES)
+env: dev
+
+config:
+  userServiceUrl: "http://user-service.dev.svc.cluster.local"
+  orderServiceUrl: "http://order-service.dev.svc.cluster.local"

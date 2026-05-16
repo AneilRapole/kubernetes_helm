@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-deployment
+  namespace: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-deployment
+  template:
+    metadata:
+      labels:
+        app: user-deployment
+    spec:
+      containers:
+      - name: user-deployment
+        image: europe-west2-docker.pkg.dev/new-dev-492605/myhomerepo/user-service:1.0
+         
+        ports:
+        - containerPort: 5000

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-order-to-user
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: user-deployment   # 👈 target pod (user)
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: order-deployment   # 👈 source pod (order)

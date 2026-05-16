@@ -1,0 +1,25 @@
+namespace: uat
+
+replicaCount: 2
+
+deployment:
+  name: order-deployment
+
+image:
+  repository: europe-west2-docker.pkg.dev/uat-project/myhomerepo/order-service
+  tag: "1.0"
+
+service:
+  port: 5001
+
+resources:
+  requests:
+    cpu: "200m"
+  limits:
+    cpu: "400m"
+
+env: uat
+
+config:
+  userServiceUrl: "http://user-service.uat.svc.cluster.local"
+  orderServiceUrl: "http://order-service.uat.svc.cluster.local"

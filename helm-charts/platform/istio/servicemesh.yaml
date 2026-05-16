@@ -1,0 +1,63 @@
+# 1. Enable automatic sidecar injection for the dev namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    istio-injection: enabled
+---
+# 2. DestinationRule for order-service
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: order-destination
+  namespace: dev
+spec:
+  host: order-deployment.dev.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE   # For simplicity in testing
+---
+# 3. DestinationRule for user-service
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: user-destination
+  namespace: dev
+spec:
+  host: user-deployment.dev.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+# 4. VirtualService to route traffic to order-service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: order-virtualservice
+  namespace: dev
+spec:
+  hosts:
+    - order-deployment.dev.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: order-deployment.dev.svc.cluster.local
+            port:
+              number: 5001
+---
+# 5. VirtualService to route traffic to user-service
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: user-virtualservice
+  namespace: dev
+spec:
+  hosts:
+    - user-deployment.dev.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: user-deployment.dev.svc.cluster.local
+            port:
+              number: 5000
