@@ -16,10 +16,14 @@ spec:
       labels:
         app: {{ .Values.deployment.name }}
 
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "{{ .Values.service.port }}"
+
     spec:
       containers:
       - name: {{ .Values.deployment.name }}
-
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
 
         ports:

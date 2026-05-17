@@ -4,16 +4,25 @@ metadata:
   name: {{ .Values.name }}
 spec:
   replicas: {{ .Values.replicaCount }}
+
   selector:
     matchLabels:
       app: {{ .Values.name }}
+
   template:
     metadata:
       labels:
         app: {{ .Values.name }}
+
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "{{ .Values.containerPort }}"
+
     spec:
       containers:
       - name: {{ .Values.name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+
         ports:
         - containerPort: {{ .Values.containerPort }}
