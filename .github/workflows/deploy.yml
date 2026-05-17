@@ -1,0 +1,92 @@
+name: Multi Environment Helm Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy-dev:
+    name: Deploy to DEV
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} \
+            --region ${{ secrets.GKE_REGION }} \
+            --project ${{ secrets.GCP_PROJECT }}
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      # Deploy services (DEV)
+      - name: Deploy Order Service
+        run: |
+          helm upgrade --install order-service ./charts/order-service \
+            -f ./charts/order-service/values/dev.yaml \
+            --namespace dev \
+            --create-namespace
+
+      - name: Deploy User Service
+        run: |
+          helm upgrade --install user-service ./charts/user-service \
+            -f ./charts/user-service/values/dev.yaml \
+            --namespace dev \
+            --create-namespace
+
+
+  deploy-uat:
+    name: Deploy to UAT
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment: uat   # ⛔ This triggers manual approval if configured in GitHub
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Get GKE credentials
+        run: |
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} \
+            --region ${{ secrets.GKE_REGION }} \
+            --project ${{ secrets.GCP_PROJECT }}
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      # Deploy services (UAT)
+      - name: Deploy Order Service
+        run: |
+          helm upgrade --install order-service ./charts/order-service \
+            -f ./charts/order-service/values/uat.yaml \
+            --namespace uat \
+            --create-namespace
+
+      - name: Deploy User Service
+        run: |
+          helm upgrade --install user-service ./charts/user-service \
+            -f ./charts/user-service/values/uat.yaml \
+            --namespace uat \
+            --create-namespace
