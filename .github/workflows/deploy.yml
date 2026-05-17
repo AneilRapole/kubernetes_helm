@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,15 +36,14 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v4
 
-      # Deploy services (DEV)
-      - name: Deploy Order Service
+      - name: Deploy Order Service (DEV)
         run: |
           helm upgrade --install order-service ./charts/order-service \
             -f ./charts/order-service/values/dev.yaml \
             --namespace dev \
             --create-namespace
 
-      - name: Deploy User Service
+      - name: Deploy User Service (DEV)
         run: |
           helm upgrade --install user-service ./charts/user-service \
             -f ./charts/user-service/values/dev.yaml \
@@ -53,7 +55,10 @@ jobs:
     name: Deploy to UAT
     runs-on: ubuntu-latest
     needs: deploy-dev
-    environment: uat   # ⛔ This triggers manual approval if configured in GitHub
+    environment: uat   # ⛔ triggers manual approval if configured in GitHub
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
@@ -76,15 +81,14 @@ jobs:
       - name: Setup Helm
         uses: azure/setup-helm@v4
 
-      # Deploy services (UAT)
-      - name: Deploy Order Service
+      - name: Deploy Order Service (UAT)
         run: |
           helm upgrade --install order-service ./charts/order-service \
             -f ./charts/order-service/values/uat.yaml \
             --namespace uat \
             --create-namespace
 
-      - name: Deploy User Service
+      - name: Deploy User Service (UAT)
         run: |
           helm upgrade --install user-service ./charts/user-service \
             -f ./charts/user-service/values/uat.yaml \
