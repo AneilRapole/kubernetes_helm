@@ -37,15 +37,15 @@ jobs:
 
       - name: Deploy Order Service (DEV)
         run: |
-          helm upgrade --install order-service ./charts/order-service \
-            -f ./charts/order-service/values/dev.yaml \
+          helm upgrade --install order-service ./helm-charts/order-service \
+            -f ./helm-charts/order-service/values.dev.yaml \
             --namespace dev \
             --create-namespace
 
       - name: Deploy User Service (DEV)
         run: |
-          helm upgrade --install user-service ./charts/user-service \
-            -f ./charts/user-service/values/dev.yaml \
+          helm upgrade --install user-service ./helm-charts/user-service \
+            -f ./helm-charts/user-service/values.dev.yaml \
             --namespace dev \
             --create-namespace
 
@@ -54,7 +54,7 @@ jobs:
     name: Deploy to UAT
     runs-on: ubuntu-latest
     needs: deploy-dev
-    environment: uat   # ⛔ triggers manual approval if configured
+    environment: uat   # triggers manual approval if enabled
 
     steps:
       - name: Checkout code
@@ -81,14 +81,14 @@ jobs:
 
       - name: Deploy Order Service (UAT)
         run: |
-          helm upgrade --install order-service ./charts/order-service \
-            -f ./charts/order-service/values/uat.yaml \
+          helm upgrade --install order-service ./helm-charts/order-service \
+            -f ./helm-charts/order-service/values.uat.yaml \
             --namespace uat \
             --create-namespace
 
       - name: Deploy User Service (UAT)
         run: |
-          helm upgrade --install user-service ./charts/user-service \
-            -f ./charts/user-service/values/uat.yaml \
+          helm upgrade --install user-service ./helm-charts/user-service \
+            -f ./helm-charts/user-service/values.uat.yaml \
             --namespace uat \
             --create-namespace
