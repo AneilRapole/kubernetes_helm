@@ -38,14 +38,14 @@ jobs:
       - name: Deploy Order Service (DEV)
         run: |
           helm upgrade --install order-service ./helm-charts/order-service \
-            -f ./helm-charts/order-service/values.dev.yaml \
+            -f ./helm-charts/order-service/values-dev.yaml \
             --namespace dev \
             --create-namespace
 
       - name: Deploy User Service (DEV)
         run: |
           helm upgrade --install user-service ./helm-charts/user-service \
-            -f ./helm-charts/user-service/values.dev.yaml \
+            -f ./helm-charts/user-service/values-dev.yaml \
             --namespace dev \
             --create-namespace
 
@@ -82,13 +82,13 @@ jobs:
       - name: Deploy Order Service (UAT)
         run: |
           helm upgrade --install order-service ./helm-charts/order-service \
-            -f ./helm-charts/order-service/values.uat.yaml \
+            -f ./helm-charts/order-service/values-uat.yaml \
             --namespace uat \
             --create-namespace
 
       - name: Deploy User Service (UAT)
         run: |
           helm upgrade --install user-service ./helm-charts/user-service \
-            -f ./helm-charts/user-service/values.uat.yaml \
+            -f ./helm-charts/user-service/values-uat.yaml \
             --namespace uat \
             --create-namespace
