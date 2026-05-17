@@ -1,16 +1,18 @@
-namespace: uat
-
 replicaCount: 2
 
 deployment:
-  name: order-deployment
+  name: order-service
 
 image:
-  repository: europe-west2-docker.pkg.dev/uat-project/myhomerepo/order-service
+  repository: europe-west2-docker.pkg.dev/newuat/myhomerepo/order-service
   tag: "1.0"
 
+containerPort: 5001
+
 service:
+  type: ClusterIP
   port: 5001
+  targetPort: 5001
 
 resources:
   requests:

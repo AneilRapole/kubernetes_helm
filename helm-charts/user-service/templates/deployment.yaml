@@ -1,21 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-deployment
-  namespace: dev
+  name: {{ .Values.name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: user-deployment
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app: user-deployment
+        app: {{ .Values.name }}
     spec:
       containers:
-      - name: user-deployment
-        image: europe-west2-docker.pkg.dev/new-dev-492605/myhomerepo/user-service:1.0
-         
+      - name: {{ .Values.name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
-        - containerPort: 5000
+        - containerPort: {{ .Values.containerPort }}

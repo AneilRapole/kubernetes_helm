@@ -3,9 +3,9 @@ kind: Ingress
 
 metadata:
   name: app-ingress
-  namespace: dev
-
 spec:
+  ingressClassName: gce
+  
   rules:
   - http:
       paths:
